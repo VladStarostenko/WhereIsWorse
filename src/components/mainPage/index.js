@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import day from "../../images/day.jpg";
 import night from "../../images/night.jpg";
 import MapContainer from "./../map/mapContainer";
+import Console from "./console";
 
 const Tr = styled.tr`
   font-size: 15px;
@@ -178,13 +179,11 @@ class MainPage extends React.Component {
           <section style={{paddingBottom: '10px', backgroundSize: "100%", backgroundImage: `url(${this.setTime()})`}}
                    className="clean-block clean-info dark">
             <div className="container">
-              <div style={{padding: "20px 0px 0px 0px", margin: "0px 0px 20px 0px"}} className="block-heading">
-                <div className="input-group"><input className="form-control" type="text"/>
-                  <div className="input-group-append">
-                    <button className="btn btn-primary" type="button" style={{backgroundColor: '#edc60f'}}>Szukaj!</button>
-                  </div>
-                </div>
-              </div>
+              <Console
+                updateData={this.updateData}
+                searchButton={this.searchButton}
+                updateLatLng={this.updateLatLng}
+              />
               <div style={{margin: '0px'}} className="row align-items-center">
                 <div className="col-md-6">
                   <MapContainer />
