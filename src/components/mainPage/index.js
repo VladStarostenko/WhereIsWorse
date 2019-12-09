@@ -14,91 +14,79 @@ const Td = styled.td`
   padding-left: 3px;
 `;
 
-// const Weather = props => {
-//   return (
-//     <div style={{backgroundColor: '#f6f6f6'}} className="col-md-6">
-//       <h3 className="text-center">"Miasto"</h3>
-//       <div className="getting-started-info">
-//         <div className="table-responsive">
-//           <table className="table">
-//             <tbody className="text-center">
-//             <Tr>
-//               <Td className="text-center">Zaraz</Td>
-//               <Td>12</Td>
-//               <Td>13</Td>
-//               <Td>14</Td>
-//               <Td>15</Td>
-//               <Td>16</Td>
-//               <Td>17</Td>
-//               <Td>18</Td>
-//               <Td>19</Td>
-//               <Td>20</Td>
-//               <Td>21</Td>
-//               <Td>22</Td>
-//               <Td>23</Td>
-//               <Td>24</Td>
-//               <Td>1</Td>
-//               <Td>2</Td>
-//               <Td>3</Td>
-//               <Td>4</Td>
-//               <Td>5</Td>
-//               <Td>6</Td>
-//               <Td>7</Td>
-//               <Td>8</Td>
-//               <Td>9</Td>
-//               <Td>10</Td>
-//             </Tr>
-//             <Tr>
-//               <Td className="text-center">{props.temp}</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//               <Td>10*</Td>
-//             </Tr>
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//       <div>
-//         <div className="table-responsive">
-//           <table className="table">
-//             <tbody className="text-center">
-//             <Tr>
-//               <Td>Wiatr</Td>
-//             </Tr>
-//             <Tr>
-//               <Td>Opady</Td>
-//             </Tr>
-//             <Tr>
-//               <Td>Ciśnięcie</Td>
-//             </Tr>
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//       <button className="btn btn-outline-primary btn-lg text-center" type="button">Update</button>
-//     </div>
-//   );
-// };
+const Weather = props => {
+  const degToDir=(deg)=>{
+    if (deg >= 22.5 && deg < 67.5){
+      return "NE";
+    }else if (deg >= 67.5 && deg<112.5){
+      return "E";
+    }else if (deg >= 112.5 && deg<157.5){
+      return "SE";
+    }else if (deg >= 157.5 && deg<202.5){
+      return "S";
+    }else if (deg >= 202.5 && deg<247.5){
+      return "SW";
+    }else if (deg >= 247.5 && deg<292.5){
+      return "W";
+    }else if (deg >= 292.5 && deg<337.5){
+      return "NW";
+    }else{
+      return "N";
+    }
+  }
+  let arrayDay=[];
+  for (let i= 0;i< 8; i++) {
+    arrayDay.push(props.arrayWeather[i]);
+  }
+
+  let elementDayTime = arrayDay.map(weather=> (
+    <Td key={arrayDay.indexOf(weather)}>{weather.dt_txt.slice(11,13)}</Td>
+  ))
+
+  let elementDayTemp = arrayDay.map(weather=> (
+    <Td className="text-center" key={arrayDay.indexOf(weather)}>{Math.round(weather.main.temp-273.15)} C</Td>
+  ))
+  return (
+    <div style={{backgroundColor: '#f6f6f6'}} className="col-md-6">
+      <h3 className="text-center">{props.city.name}</h3>
+      <div className="getting-started-info">
+        <div className="table-responsive">
+          <table className="table">
+            <tbody className="text-center">
+            <Tr>
+              <Td className="text-center">Zaraz</Td>
+
+              {elementDayTime}
+            </Tr>
+            <Tr>
+              <Td className="text-center">{Math.round(props.currentWeather.main.temp-273.15)} C</Td>
+              {elementDayTemp}
+            </Tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div className="table-responsive">
+          <table className="table">
+            <tbody className="text-center">
+            <Tr>
+              <Td>Wiatr: {props.currentWeather.wind.speed} m/s {degToDir(props.currentWeather.wind.deg)}</Td>
+            </Tr>
+            <Tr>
+              <Td>Widoczność: {props.currentWeather.visibility} m</Td>
+            </Tr>
+            <Tr>
+              <Td>Ciśnięcie: {props.currentWeather.main.pressure} hPa</Td>
+            </Tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button className="btn btn-outline-primary btn-lg text-center" onClick={()=> {console.log(props.arrayCity)}} type="button">Update</button>
+    </div>
+  );
+};
 
 class MainPage extends React.Component {
   setTime() {
@@ -123,6 +111,7 @@ class MainPage extends React.Component {
 
   updateData = (latitude, longitude) => {
     this.setState({ lat: latitude, lng: longitude });
+    this.props.getCurrentWeather(latitude, longitude);
     this.props.getForecastWeather(latitude, longitude);
     this.props.setCoordinates(latitude, longitude);
   };
@@ -130,48 +119,48 @@ class MainPage extends React.Component {
   searchButton = () => {
     const { latLng } = this.state;
     this.props.getForecastWeather(latLng.lat, latLng.lng);
-  };
-  updateLatLng = value => {
-    this.setState({ latLng: value });
-    this.props.setCoordinates(value.lat, value.lng);
+    this.props.getCurrentWeather(latLng.lat, latLng.lng);
   };
 
   render() {
-    // let ElementWeather;
-    // if (this.props.arrayWeather) {
-    //   ElementWeather = this.props.arrayWeather.map(weather => (
-    //     <div key={this.props.arrayWeather.indexOf(weather)}>
-    //       <Weather
-    //         data={weather.dt_txt}
-    //         clouds={weather.clouds.all}
-    //         temp={weather.main.temp}
-    //         temp_max={weather.main.temp_max}
-    //         temp_min={weather.main.temp_min}
-    //         pressure={weather.main.pressure}
-    //         humidity={weather.main.humidity}
-    //         mainSky={weather.weather.main}
-    //         sky={weather.weather.description}
-    //         speed={weather.wind.speed}
-    //         deg={weather.wind.deg}
-    //       />
-    //     </div>
-    //   ));
-    // } else {
-    //   ElementWeather =
-    //       <Weather
-    //         data={null}
-    //         clouds={null}
-    //         temp={null}
-    //         temp_max={null}
-    //         temp_min={null}
-    //         pressure={null}
-    //         humidity={null}
-    //         mainSky={null}
-    //         sky={null}
-    //         speed={null}
-    //         deg={null}
-    //       />
-    // }
+    // ElementWeather = <Weather
+    //       city={this.props.city}
+    //       data={weather.dt_txt}
+    //       clouds={weather.clouds.all}
+    //       temp={weather.main.temp}
+    //       temp_max={weather.main.temp_max}
+    //       temp_min={weather.main.temp_min}
+    //       pressure={weather.main.pressure}
+    //       humidity={weather.main.humidity}
+    //       mainSky={weather.weather.main}
+    //       // sky={weather.weather.description}
+    //       sky={this.props.arrayWeather[0].weather.description}
+    //       speed={weather.wind.speed}
+    //       deg={weather.wind.deg}
+    //     />
+
+    if(!(this.props.city && this.props.currentWeather)){
+      return <div></div>
+    }
+    const sortArrayCity=(arrayCity)=> {
+      return arrayCity.sort(function(a, b){
+        return a.temp-b.temp
+      })
+    }
+    let sortArray =sortArrayCity(this.props.arrayCity);
+    let sortArray5El =[];
+    for(let i =0; i<5;i++) {
+      sortArray5El.push(sortArray[i]);
+    }
+
+    let elementBadCityName = sortArray5El.map(city=> (
+      <Td key={sortArray.indexOf(city)}>{city.name}</Td>
+    ));
+
+    let elementBadCityTemp = sortArray5El.map(city=> (
+      <Td key={sortArray.indexOf(city)}>{city.temp} C</Td>
+    ));
+
 
     return (
       <div>
@@ -182,94 +171,17 @@ class MainPage extends React.Component {
               <Console
                 updateData={this.updateData}
                 searchButton={this.searchButton}
-                updateLatLng={this.updateLatLng}
               />
               <div style={{margin: '0px'}} className="row align-items-center">
                 <div className="col-md-6">
                   <MapContainer />
                 </div>
-                {/*{ElementWeather}*/}
-                <div style={{backgroundColor: '#f6f6f6'}} className="col-md-6">
-                  <h3 className="text-center">"Miasto"</h3>
-                  <div className="getting-started-info">
-                    <div className="table-responsive">
-                      <table className="table">
-                        <tbody className="text-center">
-                        <Tr>
-                          <Td className="text-center">Zaraz</Td>
-                          <Td>12</Td>
-                          <Td>13</Td>
-                          <Td>14</Td>
-                          <Td>15</Td>
-                          <Td>16</Td>
-                          <Td>17</Td>
-                          <Td>18</Td>
-                          <Td>19</Td>
-                          <Td>20</Td>
-                          <Td>21</Td>
-                          <Td>22</Td>
-                          <Td>23</Td>
-                          <Td>24</Td>
-                          <Td>1</Td>
-                          <Td>2</Td>
-                          <Td>3</Td>
-                          <Td>4</Td>
-                          <Td>5</Td>
-                          <Td>6</Td>
-                          <Td>7</Td>
-                          <Td>8</Td>
-                          <Td>9</Td>
-                          <Td>10</Td>
-                        </Tr>
-                        <Tr>
-                          <Td className="text-center">10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                          <Td>10*</Td>
-                        </Tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="table-responsive">
-                      <table className="table">
-                        <tbody className="text-center">
-                        <Tr>
-                          <Td>Wiatr</Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Opady</Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Ciśnięcie</Td>
-                        </Tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <button className="btn btn-outline-primary btn-lg text-center" type="button">Update</button>
-                </div>
+                <Weather
+                  city={this.props.city}
+                  arrayWeather={this.props.arrayWeather}
+                  currentWeather={this.props.currentWeather}
+                  arrayCity={this.props.arrayCity}
+                />
               </div>
               <div style={{backgroundColor: '#f6f6f6'}}>
                 <h3 style={{
@@ -282,28 +194,20 @@ class MainPage extends React.Component {
                   <table className="table">
                     <thead className="text-center">
                     <Tr>
-                      <th>"Miasto 1"</th>
-                      <th>"Miasto2"</th>
-                      <th>"Miasto 3"</th>
-                      <th>"Miasto 4"</th>
-                      <th>"Miasto 5"</th>
+                      {elementBadCityName}
                     </Tr>
                     </thead>
                     <tbody className="text-center">
                     <Tr>
-                      <td>Temperarura</td>
-                      <td>Temperarura</td>
-                      <td>Temperarura</td>
-                      <td>Temperarura</td>
-                      <td>Temperarura</td>
+                      {elementBadCityTemp}
                     </Tr>
-                    <Tr>
-                      <td>Opady</td>
-                      <td>Opady</td>
-                      <td>Opady</td>
-                      <td>Opady</td>
-                      <td>Opady</td>
-                    </Tr>
+                   {/*<Tr>*/}
+                    {/*  <td>Opady</td>*/}
+                    {/*  <td>Opady</td>*/}
+                    {/*  <td>Opady</td>*/}
+                    {/*  <td>Opady</td>*/}
+                    {/*  <td>Opady</td>*/}
+                    {/*</Tr>*/}
                     </tbody>
                   </table>
                 </div>

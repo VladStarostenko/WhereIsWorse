@@ -5,9 +5,27 @@ import { compose } from "redux";
 import { setCoordinates } from "../../redux/mapReducer";
 import {
   getCurrentWeather,
-  getForecastWeather
+  getForecastWeather,
+  getCurrentTempCity,
 } from "../../redux/weatherReducer";
 class MainPageContainer extends React.Component {
+  componentDidMount() {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+    navigator.geolocation.getCurrentPosition((pos) => {
+      this.props.setCoordinates(pos.coords.latitude,pos.coords.longitude);
+      this.props.getCurrentWeather(pos.coords.latitude,pos.coords.longitude);
+      this.props.getForecastWeather(pos.coords.latitude,pos.coords.longitude);
+      console.log(pos.coords.latitude);
+      console.log(pos.coords.longitude);
+    }, (err) => {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+    }, options);
+    this.props.getCurrentTempCity(this.props.arrayCity);
+  }
   render() {
     return <MainPage {...this.props} />;
   }
@@ -19,9 +37,11 @@ let mapStateToProps = state => ({
   currentWeather: state.weather.currentWeather,
   city: state.weather.city,
   arrayWeather: state.weather.arrayWeather,
+  arrayCity: state.weather.arrayCity,
 });
 export default compose(
   connect(mapStateToProps, {
+    getCurrentTempCity,
     setCoordinates,
     getCurrentWeather,
     getForecastWeather

@@ -4,3 +4,6 @@
     margin-top: calc(1.5em + .75rem + 2px);
     width: 100%
 }
+.button {
+    backgroundColor: '#edc60f';
+}

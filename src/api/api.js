@@ -11,6 +11,13 @@ export const weatherAPI = {
         return response;
       });
   },
+  getWeatherCity(city) {
+    return instance
+      .get(`weather?q=${city}&APPID=${API_KEY}`)
+      .then(response => {
+        return response;
+      });
+  },
   getWeatherForecastLatLng(lat,lng) {
     return instance
       .get(`forecast?lat=${lat}&lon=${lng}&APPID=${API_KEY}`)

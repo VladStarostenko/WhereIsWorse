@@ -16,7 +16,7 @@ class MapContainer extends React.Component {
 
 let mapStateToProps = state => ({
   lat: state.map.lat,
-  lng: state.map.lng
+  lng: state.map.lng,
 });
 export default compose(
   connect(mapStateToProps, {

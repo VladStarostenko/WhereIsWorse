@@ -29,7 +29,7 @@ class Map extends Component {
     zoom: 6
   };
   mapOnClick = mapData => {
-    // this.props.getCurrentWeather(mapData.lat, mapData.lng);
+    this.props.getCurrentWeather(mapData.lat, mapData.lng);
     this.props.getForecastWeather(mapData.lat, mapData.lng);
 
     this.props.setCoordinates(mapData.lat, mapData.lng);
@@ -59,9 +59,6 @@ class Map extends Component {
           >
             <Marker lat={this.props.lat} lng={this.props.lng} />
           </GoogleMapReact>
-        </div>
-        <div>
-          lat={this.props.lat}, lng={this.props.lng}
         </div>
       </div>
     );

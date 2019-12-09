@@ -23,7 +23,7 @@ constructor(props) {
 handleSelect = address => {
   geocodeByAddress(address)
     .then(results => getLatLng(results[0]))
-    .then(latLng => this.props.updateLatLng(latLng))
+    .then(latLng => this.props.updateData(latLng.lat,latLng.lng))
     .catch(error => console.error('Error', error));
 };
 
@@ -73,6 +73,16 @@ handleChange = address => {
               <div className="input-group-append">
                 <button className="btn btn-primary" type="button" style={{backgroundColor: '#edc60f'}} onClick={this.props.searchButton}>Szukaj!</button>
               </div>
+              <Geolocation
+                render={({
+                           position: { coords: { latitude, longitude } = {} } = {},
+                           getCurrentPosition
+                         }) =>
+                  <button className="btn btn-primary " style={{backgroundColor: '#edc60f'}} onClick={()=>{
+                    getCurrentPosition();
+                    this.props.updateData(latitude, longitude);}
+                  }>Geolocation</button>}
+              />
             </div>
           )}
         </PlacesAutocomplete>

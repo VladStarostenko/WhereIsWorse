@@ -20,10 +20,6 @@ const NavBar =()=> {
             </li>
             <li className="nav-item" role="presentation"><a className="nav-link active" style={{fontSize: 'large'}} href="index.html">tydzień</a>
             </li>
-            <li className="nav-item" role="presentation"><a className="nav-link active" style={{fontSize: 'large'}} href="index.html">miesiąc</a>
-            </li>
-            <li className="nav-item" role="presentation"><a className="nav-link active" style={{fontSize: 'large'}} href="index.html">wybierz
-              datę</a></li>
           </ul>
         </div>
       </div>
