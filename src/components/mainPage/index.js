@@ -15,6 +15,7 @@ const Td = styled.td`
 `;
 
 const Weather = props => {
+ 
   const degToDir=(deg)=>{
     if (deg >= 22.5 && deg < 67.5){
       return "NE";
@@ -34,13 +35,52 @@ const Weather = props => {
       return "N";
     }
   }
+  const testHujest=()=> {
+    let currentTime = props.currentTime.slice(11,13);
+    currentTime = parseInt(currentTime);
+    let arrayTime=[];
+    let nextTime = 0;
+    console.log(currentTime);
+    console.log(currentTime+2);
+    if(currentTime > 0 && currentTime <3) {
+      nextTime = 3; 
+    } else  if(currentTime >= 0 && currentTime <3) {
+      nextTime = 3; 
+    } else  if(currentTime >= 3 && currentTime <6) {
+      nextTime = 6; 
+    } else  if(currentTime >= 6 && currentTime <9) {
+      nextTime = 9; 
+    } else  if(currentTime >= 9 && currentTime <12) {
+      nextTime = 12; 
+    } else  if(currentTime >= 12 && currentTime <15) {
+      nextTime = 15; 
+    } else if(currentTime >= 15 && currentTime <18) {
+      nextTime = 18; 
+    } else if(currentTime >= 18 && currentTime <21) {
+      nextTime = 21; 
+    } else if(currentTime >= 21 && currentTime <24) {
+      nextTime = 0;
+    }
+    for(let i = 0; i < 8; i++) {
+      arrayTime.push(nextTime);
+      if(nextTime == 24) {
+        nextTime=0;
+      }
+      nextTime+=3;
+    }
+    console.log(arrayTime);
+    return(arrayTime);
+  }
   let arrayDay=[];
   for (let i= 0;i< 8; i++) {
     arrayDay.push(props.arrayWeather[i]);
   }
 
-  let elementDayTime = arrayDay.map(weather=> (
-    <Td key={arrayDay.indexOf(weather)}>{weather.dt_txt.slice(11,13)}</Td>
+  // let elementDayTime = arrayDay.map(weather=> (
+  //   <Td key={arrayDay.indexOf(weather)}>{weather.dt_txt.slice(11,13)}</Td>
+  // ))
+  let elementDayTime = testHujest().map(time=> (
+    <Td key={testHujest().indexOf(time)}>{time}</Td>
   ))
 
   let elementDayTemp = arrayDay.map(weather=> (
@@ -48,10 +88,11 @@ const Weather = props => {
   ))
   return (
     <div style={{backgroundColor: '#f6f6f6'}} className="col-md-6">
-      <h3 className="text-center">{props.city.name}</h3>
+<h3 className="text-center">{props.city.name}    and time  =  {props.currentTime? props.currentTime.slice(11,13) : undefined}</h3>
       <div className="getting-started-info">
         <div className="table-responsive">
           <table className="table">
+            <button onClick={testHujest}>testHujest</button>
             <tbody className="text-center">
             <Tr>
               <Td className="text-center">Zaraz</Td>
@@ -114,6 +155,7 @@ class MainPage extends React.Component {
     this.props.getCurrentWeather(latitude, longitude);
     this.props.getForecastWeather(latitude, longitude);
     this.props.setCoordinates(latitude, longitude);
+    this.props.getCurrentTime(latitude,longitude);
     console.log(this.props.getForecastWeather(latitude, longitude))
   };
 
@@ -121,6 +163,7 @@ class MainPage extends React.Component {
     const { latLng } = this.state;
     this.props.getForecastWeather(latLng.lat, latLng.lng);
     this.props.getCurrentWeather(latLng.lat, latLng.lng);
+    this.props.getCurrentTime(latLng.lat,latLng.lng);
   };
 
   render() {
@@ -178,6 +221,7 @@ class MainPage extends React.Component {
                   <MapContainer />
                 </div>
                 <Weather
+                  currentTime={this.props.currentTime}
                   city={this.props.city}
                   arrayWeather={this.props.arrayWeather}
                   currentWeather={this.props.currentWeather}

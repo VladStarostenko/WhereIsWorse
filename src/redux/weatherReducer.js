@@ -1,7 +1,8 @@
-import { weatherAPI } from "./../api/api";
+import { weatherAPI,timeAPI } from "./../api/api";
 const SET_CURRENT_WEATHER = "SET_CURRENT_WEATHER";
 const SET_FORECAST_WEATHER = "SET_FORECAST_WEATHER";
 const UPDATE_ARRAY_CITY = "UPDATE_ARRAY_CITY";
+const GET_CURRENT_TIME_PLACE = "GET_CURRENT_TIME_PLACE";
 export const setCurrentWeather = currentWeather => ({
   type: SET_CURRENT_WEATHER,
   currentWeather: currentWeather
@@ -14,6 +15,11 @@ export const setForecastWeather = forecastWeather => ({
 export const updateArrayCity = arrayCity => ({
   type: UPDATE_ARRAY_CITY,
   arrayCity: arrayCity
+});
+
+export const getCurrentTimePlace = currentTime => ({
+  type: GET_CURRENT_TIME_PLACE,
+  currentTime: currentTime
 });
 let initialState = {
   city: null,
@@ -121,6 +127,7 @@ let initialState = {
     { name: "Queenstown", temp: null },
     { name: "Manila", temp: null }
   ],
+  currentTime: null
 };
 
 const WeatherReducer = (state = initialState, action) => {
@@ -136,6 +143,11 @@ const WeatherReducer = (state = initialState, action) => {
         ...state,
         city: action.forecastWeather.city,
         arrayWeather: action.forecastWeather.list
+      };
+    case GET_CURRENT_TIME_PLACE:
+      return {
+        ...state,
+        currentTime:action.currentTime,
       };
     case UPDATE_ARRAY_CITY:
       return {
@@ -176,4 +188,12 @@ export const getCurrentTempCity = arrayCity => {
   };
 };
 
+export const getCurrentTime = (lat, lng) => {
+  return dispatch => {
+    timeAPI.getCurrentTime(lat, lng).then(res => {
+      console.log(res.data);
+      dispatch(getCurrentTimePlace(res.data.time));
+    });
+  };
+};
 export default WeatherReducer;

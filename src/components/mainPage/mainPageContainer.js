@@ -7,6 +7,7 @@ import {
   getCurrentWeather,
   getForecastWeather,
   getCurrentTempCity,
+  getCurrentTime,
 } from "../../redux/weatherReducer";
 class MainPageContainer extends React.Component {
   componentDidMount() {
@@ -19,6 +20,7 @@ class MainPageContainer extends React.Component {
       this.props.setCoordinates(pos.coords.latitude,pos.coords.longitude);
       this.props.getCurrentWeather(pos.coords.latitude,pos.coords.longitude);
       this.props.getForecastWeather(pos.coords.latitude,pos.coords.longitude);
+      this.props.getCurrentTime(pos.coords.latitude,pos.coords.longitude);
       console.log(pos.coords.latitude);
       console.log(pos.coords.longitude);
     }, (err) => {
@@ -38,12 +40,14 @@ let mapStateToProps = state => ({
   city: state.weather.city,
   arrayWeather: state.weather.arrayWeather,
   arrayCity: state.weather.arrayCity,
+  currentTime:state.weather.currentTime,
 });
 export default compose(
   connect(mapStateToProps, {
     getCurrentTempCity,
     setCoordinates,
     getCurrentWeather,
-    getForecastWeather
+    getForecastWeather,
+    getCurrentTime,
   })
 )(MainPageContainer);

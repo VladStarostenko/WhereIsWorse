@@ -5,7 +5,8 @@ import { compose } from "redux";
 import { setCoordinates } from "../../redux/mapReducer";
 import {
   getCurrentWeather,
-  getForecastWeather
+  getForecastWeather,
+  getCurrentTime,
 } from "../../redux/weatherReducer";
 
 class MapContainer extends React.Component {
@@ -22,6 +23,7 @@ export default compose(
   connect(mapStateToProps, {
     getCurrentWeather,
     getForecastWeather,
-    setCoordinates
+    setCoordinates,
+    getCurrentTime,
   })
 )(MapContainer);
