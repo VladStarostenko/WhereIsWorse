@@ -114,6 +114,7 @@ class MainPage extends React.Component {
     this.props.getCurrentWeather(latitude, longitude);
     this.props.getForecastWeather(latitude, longitude);
     this.props.setCoordinates(latitude, longitude);
+    console.log(this.props.getForecastWeather(latitude, longitude))
   };
 
   searchButton = () => {
