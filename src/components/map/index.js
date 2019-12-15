@@ -31,7 +31,7 @@ class Map extends Component {
   mapOnClick = mapData => {
     this.props.getCurrentWeather(mapData.lat, mapData.lng);
     this.props.getForecastWeather(mapData.lat, mapData.lng);
-
+    this.props.getCurrentTime(mapData.lat,mapData.lng);
     this.props.setCoordinates(mapData.lat, mapData.lng);
   };
 

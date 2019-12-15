@@ -34,7 +34,6 @@ const Weather = props => {
       return "N";
     }
   }
-
   let arrayDay=[];
   for (let i= 0;i< 8; i++) {
     arrayDay.push(props.arrayWeather[i]);
@@ -100,7 +99,7 @@ class MainPage extends React.Component {
     }
     return time
   }
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -218,7 +217,6 @@ class MainPage extends React.Component {
           </section>
         </main>
         <footer style={{paddingTop: 0}} className="page-footer dark">
-          <button onClick={this.test()}> test</button>
           <div style={{marginTop: 0}} className="footer-copyright">
             <p>© 2019 Bad_Weather</p>
           </div>

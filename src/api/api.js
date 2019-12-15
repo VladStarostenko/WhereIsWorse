@@ -24,5 +24,14 @@ export const weatherAPI = {
       .then(response => {
         return response;
       });
-  }
+  },
 };
+
+export const timeAPI= {
+  getCurrentTime(lat,lng) {
+    return axios
+      .get(`http://api.geonames.org/timezoneJSON?lat=${lat}&lng=${lng}&radius=200&username=andriimanevych`).then(res=> {
+        return res;
+      })
+  }
+}
