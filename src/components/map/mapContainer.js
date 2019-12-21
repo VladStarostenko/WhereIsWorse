@@ -6,7 +6,6 @@ import { setCoordinates } from "../../redux/mapReducer";
 import {
   getCurrentWeather,
   getForecastWeather,
-  getCurrentTime,
 } from "../../redux/weatherReducer";
 
 class MapContainer extends React.Component {
@@ -24,6 +23,5 @@ export default compose(
     getCurrentWeather,
     getForecastWeather,
     setCoordinates,
-    getCurrentTime,
   })
 )(MapContainer);

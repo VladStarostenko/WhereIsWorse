@@ -2,7 +2,7 @@ import * as axios from "axios";
 const instance = axios.create({
   baseURL: "http://api.openweathermap.org/data/2.5/"
 });
-const API_KEY = "98c0428b737f3d8ac7afd1c061e79afc";
+const API_KEY = "72892edc40b017daa6022c41663c558b";
 export const weatherAPI = {
   getWeatherLatLng(lat, lng) {
     return instance
@@ -26,12 +26,3 @@ export const weatherAPI = {
       });
   },
 };
-
-export const timeAPI= {
-  getCurrentTime(lat,lng) {
-    return axios
-      .get(`http://api.geonames.org/timezoneJSON?lat=${lat}&lng=${lng}&radius=200&username=andriimanevych`).then(res=> {
-        return res;
-      })
-  }
-}

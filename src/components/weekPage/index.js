@@ -1,11 +1,23 @@
 import React, { useState, Component } from "react";
+import day from "../../images/day.jpg";
+import night from "../../images/night.jpg";
 
 const DayWeather = props => {
   let [displayDiv, setDisplayDiv] = useState(true);
+  const setCurTime = (weather) => {
+    let curTime = parseInt(weather.dt_txt.slice(11,13)) + props.city.timezone/3600;
+    if(curTime < 0) {
+      curTime += 24;
+    } else if (curTime > 24) {
+      curTime -=24;
+    }
+    return curTime;
+  }
   return (
     <tr>
       <td>
-        {props.weather.dt_txt}
+        {props.weather.dt_txt.slice(0,10) + " "}
+        {setCurTime(props.weather) }
         <button
           onClick={() => {
             setDisplayDiv(!displayDiv);
@@ -43,45 +55,40 @@ const DayWeather = props => {
 };
 
 class WeekPage extends React.Component {
-  //   componentDidMount() {
-  //       this.test();
-  //   }
-  //   test=()=> {
-  //     let counter = 0;
-  //     const checkArray = arrayWeather => {
-  //       let arrayWeatherNEEEEEEEEEW = [];
-  //       let dataWeather = arrayWeather[counter].dt_txt;
-  //       for (let i = counter; i < arrayWeather.length; i++) {
-  //         if (arrayWeather[i].dt_txt.slice(8, 10) === dataWeather.slice(8, 10)) {
-  //           arrayWeatherNEEEEEEEEEW.push(arrayWeather[i]);
-  //           counter++;
-  //         }
-  //       }
-  //       console.log(counter);
-  //       return arrayWeatherNEEEEEEEEEW;
-  //     };
-  //     let tmp;
-  //     while (counter < this.props.arrayWeather.length) {
-  //       tmp = checkArray(this.props.arrayWeather);
-  //       console.log(counter);
-  //       console.log(tmp[0].dt_txt);
-  //     }
-  //   }
+  setTime() {
+    let curTime = parseInt(this.props.arrayWeather[0].dt_txt.slice(11,13)) + this.props.city.timezone/3600;
+    if(curTime < 0) {
+      curTime += 24;
+    } else if (curTime > 24) {
+      curTime -=24;
+    }
+    let date;
+    if(curTime > 7 && curTime < 20) {
+      date = day
+    } else {
+      date = night
+    }
+    return date
+  }
 
   render() {
+    if(!(this.props.arrayWeather && this.props.currentWeather)){
+      return <div></div>
+    }
     let elementDayWeather = this.props.arrayWeather.map(weather => (
       <DayWeather
         key={this.props.arrayWeather.indexOf(weather)}
         weather={weather}
+        city = {this.props.city}
       />
     ));
 
     return (
       <>
-        <main className="page landing-page" style={{ "padding-top": "70px" }}>
+        <main className="page landing-page" style={{ "padding-top": "70px", paddingBottom:"70px", backgroundSize: "100%", backgroundImage: `url(${this.setTime()})`}}>
           <section
             className="clean-block clean-info dark"
-            style={{ "padding-bottom": "10px" }}
+            style={{ "padding-bottom": "10px", "margin": "70px" }}
           >
             <div className="container">
               <div>

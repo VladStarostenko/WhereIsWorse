@@ -2,11 +2,30 @@ import React from "react";
 import WeekPage from ".";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import {getForecastWeather} from './../../redux/weatherReducer';
-
+import { setCoordinates } from "../../redux/mapReducer";
+import {
+  getCurrentWeather,
+  getForecastWeather,
+} from "../../redux/weatherReducer";
 class WeekPageContainer extends React.Component {
   componentDidMount() {
-    this.props.getForecastWeather(this.props.lat, this.props.lng);
+    if(this.props.lat && this.props.lng){
+      this.props.getForecastWeather(this.props.lat,this.props.lng);
+    } else {
+      var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+      navigator.geolocation.getCurrentPosition((pos) => {
+        this.props.setCoordinates(pos.coords.latitude,pos.coords.longitude);
+        this.props.getCurrentWeather(pos.coords.latitude,pos.coords.longitude);
+        this.props.getForecastWeather(pos.coords.latitude,pos.coords.longitude);
+      },
+        (err) => {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+      }, options);
+    }
   }
   render() {
     return <WeekPage {...this.props} />;
@@ -15,11 +34,15 @@ class WeekPageContainer extends React.Component {
 
 let mapStateToProps = state => ({
   arrayWeather: state.weather.arrayWeather,
+  currentWeather: state.weather.currentWeather,
   lat: state.map.lat,
-  lng: state.map.lng
+  lng: state.map.lng,
+  city: state.weather.city
 });
 export default compose(
   connect(mapStateToProps, {
-    getForecastWeather
+    getForecastWeather,
+    setCoordinates,
+    getCurrentWeather
   })
 )(WeekPageContainer);

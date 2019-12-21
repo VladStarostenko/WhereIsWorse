@@ -12,7 +12,7 @@ const NavBar = () => {
     <Nav className="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
       <div className="container">
         {" "}
-        <NavLink className="navbar-brand logo" to="/day">
+        <NavLink className="navbar-brand logo" to="/">
           {" "}
           Gorzej Sp Zoo
         </NavLink>
@@ -30,7 +30,7 @@ const NavBar = () => {
               <NavLink
                 className="nav-link active"
                 style={{ fontSize: "large" }}
-                to="/day"
+                to="/"
               >
                 Dziś
               </NavLink>

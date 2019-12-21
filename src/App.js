@@ -9,10 +9,11 @@ function App(props) {
   return (
     <div className="App">
       <Navbar />
+      <div>TEST</div>
       <div>
         <Route
           exact
-          path="/day"
+          path="/"
           component={MainPageContainer}
         />
         <Route
