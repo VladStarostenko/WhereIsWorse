@@ -4,6 +4,9 @@ import day from "../../images/day.jpg";
 import night from "../../images/night.jpg";
 import MapContainer from "./../map/mapContainer";
 import Console from "./console";
+import sky from "../../images/sky.svg"
+import skysun from "../../images/skysun.svg"
+import sun from "../../images/sun.svg"
 
 const Tr = styled.tr`
   font-size: 15px;
@@ -40,7 +43,7 @@ const Weather = props => {
   }
 
   const setCurTime = (weather) => {
-    let curTime = parseInt(weather.dt_txt.slice(11,13)) + props.city.timezone/3600 -1;
+    let curTime = parseInt(weather.dt_txt.slice(11,13)) + props.city.timezone/3600;
     if(curTime < 0) {
       curTime += 24;
     } else if (curTime > 24) {
@@ -49,6 +52,19 @@ const Weather = props => {
     return curTime;
   }
 
+  const setSky = (weather) => {
+    let icon
+    if(weather.clouds.all > 66){
+      icon = sky
+    }else if(weather.clouds.all > 33 && weather.clouds.all <= 66){
+      icon = skysun
+    }else{
+      icon = sun
+    }
+    return icon
+  }
+
+
   let elementDayTime = arrayDay.map(weather=> (
     <Td key={arrayDay.indexOf(weather)}>{setCurTime(weather)}</Td>
   ))
@@ -56,6 +72,11 @@ const Weather = props => {
   let elementDayTemp = arrayDay.map(weather=> (
     <Td className="text-center" key={arrayDay.indexOf(weather)}>{Math.round(weather.main.temp-273.15)} C</Td>
   ))
+
+  let elementDayIcon = arrayDay.map(weather=> (
+    <Td className="text-center" key={arrayDay.indexOf(weather)}><img width="47.2" height="47.2" src={setSky(weather)} alt="icon" /></Td>
+  ))
+
   return (
     <div style={{backgroundColor: '#f6f6f6'}} className="col-md-6">
       <h3 className="text-center">{props.city.name}</h3>
@@ -71,6 +92,10 @@ const Weather = props => {
             <Tr>
               <Td className="text-center">{Math.round(props.currentWeather.main.temp-273.15)} C</Td>
               {elementDayTemp}
+            </Tr>
+            <Tr>
+              <Td className="text-center"><img width="47.2" height="47.2" src={setSky(props.currentWeather)} alt="icon" /></Td>
+              {elementDayIcon}
             </Tr>
             </tbody>
           </table>
@@ -99,7 +124,8 @@ const Weather = props => {
 
 class MainPage extends React.Component {
   setTime() {
-    let curTime = parseInt(this.props.arrayWeather[0].dt_txt.slice(11,13)) - this.props.currentWeather.timezone/3600;
+    let d = new Date()
+    let curTime = d.getUTCHours() + this.props.currentWeather.timezone/3600;
     if(curTime < 0) {
       curTime += 24;
     } else if (curTime > 24) {
@@ -141,7 +167,6 @@ class MainPage extends React.Component {
     if(!(this.props.city && this.props.currentWeather)){
       return <div></div>
     }
-
     const sortArrayCity=(arrayCity)=> {
       return arrayCity.sort(function(a, b){
         return a.temp-b.temp
@@ -151,7 +176,7 @@ class MainPage extends React.Component {
     const findCity=(sortArray) => {
       let index;
       for(let i = 0; i < sortArray.length; i++){
-        if(sortArray[i].name === this.props.city.name){
+        if(sortArray[i].temp === Math.round(this.props.currentWeather.main.temp-273.15)){
           index = i;
           return index;
         }
@@ -163,28 +188,35 @@ class MainPage extends React.Component {
 
     let sortArray5El =[];
     let uniqKey = [];
+
+    if(!(indexOfOurCity)){
+      return <div></div>
+    }
+
     while(uniqKey.length < 5) {
       let k = Math.floor(Math.random() * (indexOfOurCity));
-      if(uniqKey.indexOf( k ) !== -1){
-        uniqKey.push(k);
-        sortArray5El.push(sortArray[k]);
+      if(!uniqKey.includes( k )){
+        if(sortArray[k].temp !== null) {
+          uniqKey.push(k);
+          sortArray5El.push(sortArray[k]);
+        }
       }
     }
 
     sortArray5El = sortArrayCity(sortArray5El)
 
     let elementBadCityName = sortArray5El.map(city=> (
-      <Td key={sortArray5El.indexOf(city)}>{city.name}</Td>
+      <Td key={sortArray.indexOf(city)}>{city.name}</Td>
     ));
 
     let elementBadCityTemp = sortArray5El.map(city=> (
-      <Td key={sortArray5El.indexOf(city)}>{city.temp} C</Td>
+      <Td key={sortArray.indexOf(city)}>{city.temp} C</Td>
     ));
 
 
     return (
       <div>
-        <main className="page landing-page" style={{paddingTop: '50px'}}>
+        <main className="page landing-page" style={{paddingTop: '20px'}}>
           <section style={{paddingBottom: '10px', backgroundSize: "100%", backgroundImage: `url(${this.setTime()})`}}
                    className="clean-block clean-info dark">
             <div className="container">
@@ -194,7 +226,7 @@ class MainPage extends React.Component {
               />
               <div style={{margin: '0px'}} className="row align-items-center">
                 <div className="col-md-6">
-                  {/*<MapContainer />*/}
+                  <MapContainer />
                 </div>
                 <Weather
                   city={this.props.city}

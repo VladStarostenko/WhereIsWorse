@@ -9,9 +9,9 @@ import {
   getCurrentTempCity,
 } from "../../redux/weatherReducer";
 class MainPageContainer extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.getCurrentTempCity(this.props.arrayCity);
-    if(this.props.lat && this.props.lng){
+    if(this.props.currentWeather){
       this.props.setCoordinates(this.props.lat, this.props.lng);
       this.props.getCurrentWeather(this.props.lat, this.props.lng);
       this.props.getForecastWeather(this.props.lat, this.props.lng);

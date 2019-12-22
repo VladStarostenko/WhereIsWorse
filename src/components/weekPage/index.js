@@ -2,22 +2,39 @@ import React, { useState, Component } from "react";
 import day from "../../images/day.jpg";
 import night from "../../images/night.jpg";
 
+
+const Weather = props => {
+  return (
+    <div className="table-responsive">
+      <table className="table">
+        <tbody>
+        <tr>
+          <td>{props.weather.dt_txt.slice(11,16)}</td>
+          <td>{Math.round(props.weather.main.temp-273.15) + " C"}</td>
+          <td>{Math.round(props.weather.main.feels_like-273.15) + " C"}</td>
+          <td>{props.weather.main.pressure + " hPa"}</td>
+          <td>{props.weather.wind.speed + " m/s"}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
 const DayWeather = props => {
+
+  let elementWeather = props.weather.map(weather => (
+    <Weather
+      key={props.weather.indexOf(weather)}
+      weather={weather}
+    />
+  ));
+
   let [displayDiv, setDisplayDiv] = useState(true);
-  const setCurTime = (weather) => {
-    let curTime = parseInt(weather.dt_txt.slice(11,13)) + props.city.timezone/3600;
-    if(curTime < 0) {
-      curTime += 24;
-    } else if (curTime > 24) {
-      curTime -=24;
-    }
-    return curTime;
-  }
   return (
     <tr>
       <td>
-        {props.weather.dt_txt.slice(0,10) + " "}
-        {setCurTime(props.weather) }
+        {props.weather[0].dt_txt.slice(0,10)}
         <button
           onClick={() => {
             setDisplayDiv(!displayDiv);
@@ -25,29 +42,31 @@ const DayWeather = props => {
           className="btn btn-primary float-right"
           type="button"
           style={{
-            "margin-left": "0",
-            "margin-right": "50px",
-            "margin-top": "-5px"
+            marginLeft: "0",
+            marginRight: "50px",
+            marginTop: "-5px"
           }}
         >
           Zobacz pogodę
         </button>
         <div
           className={displayDiv ? "d-none" : undefined}
-          style={{ "margin-top": "15px" }}
+          style={{ marginTop: "15px" }}
         >
           <div className="table-responsive">
             <table className="table">
               <tbody>
-                <tr>
-                  <td>{props.weather.main.temp}</td>
-                  <td>{props.weather.main.feels_like}</td>
-                  <td>{props.weather.main.pressure}</td>
-                  <td>{props.weather.wind.speed}</td>
-                </tr>
+              <tr>
+                <td>Godzina:</  td>
+                <td>Temperatura:</td>
+                <td>Odczuwalna:</td>
+                <td>Ciśnienie:</td>
+                <td>Wiatr:</td>
+              </tr>
               </tbody>
             </table>
           </div>
+          {elementWeather}
         </div>
       </td>
     </tr>
@@ -56,7 +75,8 @@ const DayWeather = props => {
 
 class WeekPage extends React.Component {
   setTime() {
-    let curTime = parseInt(this.props.arrayWeather[0].dt_txt.slice(11,13)) + this.props.city.timezone/3600;
+    let d = new Date()
+    let curTime = d.getUTCHours() + this.props.currentWeather.timezone/3600;
     if(curTime < 0) {
       curTime += 24;
     } else if (curTime > 24) {
@@ -75,30 +95,60 @@ class WeekPage extends React.Component {
     if(!(this.props.arrayWeather && this.props.currentWeather)){
       return <div></div>
     }
-    let elementDayWeather = this.props.arrayWeather.map(weather => (
+
+    const getDates = () => {
+      let dates = []
+      let dateForecast = [];
+      let date = this.props.arrayWeather[0].dt_txt.slice(0,10);
+      for(let j = 0; j < this.props.arrayWeather.length; j++) {
+        for (let i = j; i < this.props.arrayWeather.length; i++) {
+          if (this.props.arrayWeather[i].dt_txt.slice(0, 10) === date) {
+            dateForecast.push(this.props.arrayWeather[i])
+            if(i === this.props.arrayWeather.length-1){
+              dates.push(dateForecast)
+              return dates
+            }
+          }else{
+            if(i+1 < this.props.arrayWeather.length) {
+              date = this.props.arrayWeather[i].dt_txt.slice(0, 10)
+              j = i-1;
+            }
+            break
+          }
+        }
+        if(dateForecast.length !== 0) {
+          dates.push(dateForecast)
+          dateForecast = []
+        }
+      }
+      return dates
+    }
+
+    const dates = getDates()
+
+    let elementDayWeather = dates.map(weather => (
       <DayWeather
-        key={this.props.arrayWeather.indexOf(weather)}
+        key={dates.indexOf(weather)}
         weather={weather}
-        city = {this.props.city}
       />
     ));
 
     return (
       <>
-        <main className="page landing-page" style={{ "padding-top": "70px", paddingBottom:"70px", backgroundSize: "100%", backgroundImage: `url(${this.setTime()})`}}>
+        <main className="page landing-page" style={{ paddingTop: "70px", paddingBottom:"70px", backgroundSize: "100%", backgroundImage: `url(${this.setTime()})`}}>
           <section
             className="clean-block clean-info dark"
-            style={{ "padding-bottom": "10px", "margin": "70px" }}
+            style={{ paddingBottom: "10px", "margin": "70px" }}
           >
             <div className="container">
               <div>
                 <h3
                   className="text-center"
                   style={{
-                    "margin-top": "15px",
-                    "margin-bottom": "15px",
-                    "padding-top": "5px",
-                    "padding-bottom": "5px"
+                    marginTop: "15px",
+                    marginBottom: "15px",
+                    paddingTop: "5px",
+                    paddingBottom: "5px"
                   }}
                 >
                   Wybierz date{" "}
@@ -112,8 +162,8 @@ class WeekPage extends React.Component {
             </div>
           </section>
         </main>
-        <footer className="page-footer dark" style={{ "padding-top": "0px" }}>
-          <div className="footer-copyright" style={{ "margin-top": "0px" }}>
+        <footer className="page-footer dark" style={{ paddingTop: "0px" }}>
+          <div className="footer-copyright" style={{ marginTop: "0px" }}>
             <p>© 2019 Bad_Weather</p>
           </div>
         </footer>

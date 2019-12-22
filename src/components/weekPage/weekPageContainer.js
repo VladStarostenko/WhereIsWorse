@@ -9,7 +9,7 @@ import {
 } from "../../redux/weatherReducer";
 class WeekPageContainer extends React.Component {
   componentDidMount() {
-    if(this.props.lat && this.props.lng){
+    if(this.props.currentWeather){
       this.props.getForecastWeather(this.props.lat,this.props.lng);
     } else {
       var options = {
