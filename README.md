@@ -2,6 +2,8 @@
 
 It's aplication for checking the weather as well as finding out where the weather is worse. 
 
+To run the app you need to add weather api key in api.js
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
