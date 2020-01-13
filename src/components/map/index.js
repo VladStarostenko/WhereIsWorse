@@ -1,7 +1,7 @@
 import s from "./index.module.css";
 import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
-const API_KEY = "AIzaSyDj5m0sPFlzVPw1ccQ1q7aGf01ukyFmnoA";
+const API_KEY = "";
 const Marker = () => <div className={s.marker}></div>;
 function createMapOptions(maps) {
   return {
