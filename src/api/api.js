@@ -2,7 +2,7 @@ import * as axios from "axios";
 const instance = axios.create({
   baseURL: "http://api.openweathermap.org/data/2.5/"
 });
-const API_KEY = "72892edc40b017daa6022c41663c558b";
+const API_KEY = "";
 export const weatherAPI = {
   getWeatherLatLng(lat, lng) {
     return instance
