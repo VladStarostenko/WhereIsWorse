@@ -1,3 +1,7 @@
+## WhereIsWorse
+
+It's aplication for checking the weather as well as finding out where the weather is worse. 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
